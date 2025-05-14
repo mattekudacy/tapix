@@ -48,10 +48,17 @@ python manage.py migrate
 python manage.py create_initial_templates
 ```
 7. Create a Superuser
-8. Run Development Server
-Visit http://127.0.0.1:8000/ in your browser to see the application.
+```python
+python manage.py createsuperuser
+```
+9. Run Development Server
+```python
+python manage.py runserver
+# Visit http://127.0.0.1:8000/ in your browser to see the application.
+```
 
 ## Project Structure
+```
 tapix/
 ├── portfolio_project/      # Project configuration
 ├── portfolios/             # Main application
@@ -72,46 +79,22 @@ tapix/
 │       └── templates/      # Template preview images
 ├── manage.py               # Django management script
 └── requirements.txt        # Project dependencies
+```
 
-Features
-User registration and authentication
-Create and edit portfolios
-Choose from multiple portfolio templates
-Add projects with descriptions and images
-Add personal information and contact details
-Public portfolio pages with unique URLs
-Responsive design for mobile and desktop
-Development Workflow
-Create a feature branch from main
-Implement your changes
-Write or update tests if applicable
-Ensure your code passes all tests
-Submit a pull request
-Common Tasks
-Adding a New Portfolio Template
-Create a new HTML template in templates
-Add preview images in static/images/templates/
-Update create_initial_templates.py
-Database Migrations
-When changing models:
+## Features
+- User registration and authentication
+- Create and edit portfolios
+- Choose from multiple portfolio templates
+- Add projects with descriptions and images
+- Add personal information and contact details
+- Public portfolio pages with unique URLs
+- Responsive design for mobile and desktop
 
-Troubleshooting
-Template Does Not Exist Error
-Check if the template file exists in the correct directory
-Ensure DIRS is properly configured in settings.py
-Run python [manage.py](http://_vscodecontentref_/2) collectstatic if using static files
-Database Issues
-Check your database connection settings
-Ensure all migrations have been applied
-Deployment
-For production deployment:
-
-Set DEBUG=False in your environment
-Configure a production database (PostgreSQL recommended)
-Set up static files serving
-Use a proper web server like Gunicorn
-Configure HTTPS with a reverse proxy like Nginx
-License
-[Your chosen license here]
+## Development Workflow
+1. Create a feature branch from main
+2. Implement your changes
+3. Write or update tests if applicable
+4. Ensure your code passes all tests
+5. Submit a pull request
 
 For any questions or issues, please open an issue on GitHub or contact the project maintainers.
