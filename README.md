@@ -1,4 +1,4 @@
-# Tapix
+# Tapix 💳
 
 A Django-based web application that allows users to create and publish professional online portfolios. Users can choose from different templates, add their projects, skills, and contact information, and share their portfolio using a unique URL. This project also supports future NFC card integration.
 
