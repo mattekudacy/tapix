@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Portfolio Creator{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Your Portfolios</h1>
+    
+    <div class="mb-4">
+        <a href="{% url 'choose_template' %}" class="btn btn-primary">Create New Portfolio</a>
+    </div>
+    
+    {% if portfolios %}
+        <div class="row">
+            {% for portfolio in portfolios %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ portfolio.title }}</h5>
+                            <p class="card-text">{{ portfolio.tagline }}</p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Created: {{ portfolio.created_at|date:"M d, Y" }}
+                                </small>
+                            </p>
+                            <p>
+                                Status: 
+                                {% if portfolio.is_published %}
+                                    <span class="badge bg-success">Published</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Draft</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'edit_portfolio' portfolio_id=portfolio.id %}" class="btn btn-sm btn-primary">Edit</a>
+                            {% if portfolio.is_published %}
+                                <a href="{{ portfolio.get_absolute_url }}" class="btn btn-sm btn-secondary" target="_blank">View</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            You don't have any portfolios yet. Create your first portfolio by clicking the button above!
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

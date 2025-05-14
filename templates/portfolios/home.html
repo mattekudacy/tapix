@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio Creator{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Create your professional portfolio</h1>
+    <p class="lead">Show off your projects, skills and experience with a beautiful portfolio website</p>
+    <hr class="my-4">
+    <p>Choose from multiple templates, customize your content, and share your portfolio online with a unique link.</p>
+    <div class="mt-4">
+        {% if user.is_authenticated %}
+            <a class="btn btn-primary btn-lg" href="{% url 'dashboard' %}">Go to Dashboard</a>
+        {% else %}
+            <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Get Started</a>
+            <a class="btn btn-outline-secondary btn-lg" href="{% url 'login' %}">Log In</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <h3>Choose a Template</h3>
+        <p>Select from our professionally designed templates that showcase your work in the best way.</p>
+    </div>
+    <div class="col-md-4">
+        <h3>Add Your Content</h3>
+        <p>Easily add your projects, skills, and experience with our user-friendly interface.</p>
+    </div>
+    <div class="col-md-4">
+        <h3>Share Your Portfolio</h3>
+        <p>Get a unique link to share your portfolio with potential clients or employers.</p>
+    </div>
+</div>
+{% endblock %}

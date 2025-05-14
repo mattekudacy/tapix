@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if is_preview %}Basic Template Preview{% else %}{{ portfolio.title }}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<!-- No changes to CSS -->
+{% endblock %}
+
+{% block content %}
+<div class="portfolio-container">
+    <!-- Header with profile info -->
+    <header class="portfolio-header">
+        {% if portfolio.profile_image %}
+            <img src="{{ portfolio.profile_image.url }}" alt="{{ portfolio.title }}" class="profile-pic">
+        {% elif is_preview %}
+            <img src="https://placehold.co/150x150" alt="{{ portfolio.title }}" class="profile-pic">
+        {% endif %}
+        
+        <h1>{{ portfolio.title }}</h1>
+        
+        {% if portfolio.tagline %}
+            <p class="tagline">{{ portfolio.tagline }}</p>
+        {% endif %}
+    </header>
+
+    <!-- Rest of the template -->
+    <div class="container">
+        <!-- Bio section -->
+        {% if portfolio.bio %}
+        <div class="bio">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    {{ portfolio.bio|linebreaks }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Project sections -->
+        {% for section in sections %}
+            <div class="portfolio-section mb-5">
+                <h2 class="section-title">{{ section.title }}</h2>
+                
+                <div class="row">
+                    {% for project in section.projects %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card project-card">
+                                {% if project.image %}
+                                    <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                                {% elif is_preview %}
+                                    <img src="https://placehold.co/400x200?text=Project+Image" class="card-img-top" alt="{{ project.title }}">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ project.title }}</h5>
+                                    <p class="card-text">{{ project.description|truncatewords:30 }}</p>
+                                    {% if project.url %}
+                                        <a href="{{ project.url }}" class="btn btn-outline-primary" target="_blank">View Project</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        {% if not is_preview %}
+                        <div class="col-12">
+                            <p class="text-muted">No projects added yet.</p>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        
+        <!-- Contact information -->
+        {% if portfolio.contact %}
+        <div class="contact-info mt-5">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="section-title">Contact</h2>
+                    
+                    <div class="row">
+                        {% if portfolio.contact.email %}
+                        <div class="col-md-6">
+                            <p><strong>Email:</strong> <a href="mailto:{{ portfolio.contact.email }}">{{ portfolio.contact.email }}</a></p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if portfolio.contact.phone %}
+                        <div class="col-md-6">
+                            <p><strong>Phone:</strong> {{ portfolio.contact.phone }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="social-links text-center mt-4">
+                        {% if portfolio.contact.linkedin %}
+                            <a href="{{ portfolio.contact.linkedin }}" target="_blank" title="LinkedIn">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                        {% endif %}
+                        
+                        {% if portfolio.contact.github %}
+                            <a href="{{ portfolio.contact.github }}" target="_blank" title="GitHub">
+                                <i class="bi bi-github"></i>
+                            </a>
+                        {% endif %}
+                        
+                        {% if portfolio.contact.twitter %}
+                            <a href="{{ portfolio.contact.twitter }}" target="_blank" title="Twitter">
+                                <i class="bi bi-twitter"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if is_preview %}
+    <div class="container mt-4 mb-5">
+        <div class="alert alert-info">
+            <h4 class="alert-heading">This is a preview of the Basic Template</h4>
+            <p>This example shows how your portfolio will look with this template. The actual content will be replaced with your own when you create your portfolio.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

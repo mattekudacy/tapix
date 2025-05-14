@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Choose Template | Portfolio Creator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Choose a Template</h1>
+    
+    <div class="row">
+        {% for template in templates %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">{{ template.name }}</h5>
+                    </div>
+                    
+                    <div class="card-img-top">
+                        {% if template.name == "Basic Portfolio" %}
+                            <img src="https://placehold.co/800x450/e9ecef/495057?text=Basic+Portfolio+Preview" 
+                                 class="img-fluid" alt="Basic Portfolio Preview">
+                        {% elif template.name == "Modern Portfolio" %}
+                            <img src="https://placehold.co/800x450/212529/e9ecef?text=Modern+Portfolio+Preview" 
+                                 class="img-fluid" alt="Modern Portfolio Preview">
+                        {% else %}
+                            <img src="https://placehold.co/800x450?text=Template+Preview" 
+                                 class="img-fluid" alt="Template Preview">
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-body">
+                        <p class="card-text">{{ template.description }}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{% url 'template_preview' template_name=template.template_file|cut:'.html' %}" class="btn btn-outline-secondary" target="_blank">View Full Preview</a>
+                        <a href="{% url 'create_portfolio' template_id=template.id %}" class="btn btn-primary">Select Template</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    No templates available. Please contact the administrator.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

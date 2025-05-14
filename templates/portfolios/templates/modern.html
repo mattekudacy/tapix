@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ portfolio.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .portfolio-modern {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .hero-section {
+        height: 70vh;
+        background-color: #141E30;
+        background-image: linear-gradient(to right, #141E30, #243B55);
+        color: white;
+        display: flex;
+        align-items: center;
+    }
+    
+    .hero-content {
+        max-width: 800px;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-tagline {
+        font-size: 1.5rem;
+        opacity: 0.8;
+        margin-bottom: 2rem;
+    }
+    
+    .profile-image-container {
+        position: relative;
+    }
+    
+    .profile-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 5px solid white;
+    }
+    
+    .section {
+        padding: 5rem 0;
+    }
+    
+    .section-title {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 2.5rem;
+        font-weight: 700;
+    }
+    
+    .section-title::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -10px;
+        height: 4px;
+        width: 50px;
+        background-color: #243B55;
+    }
+    
+    .project-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+    
+    .project-image {
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .project-content {
+        padding: 1.5rem;
+    }
+    
+    .contact-section {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        padding: 3rem;
+    }
+    
+    .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .contact-icon {
+        background-color: #243B55;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.2rem;
+    }
+    
+    .social-links {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .social-button {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #243B55;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-size: 1.2rem;
+        transition: background-color 0.3s;
+    }
+    
+    .social-button:hover {
+        background-color: #141E30;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="portfolio-modern">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="hero-content">
+                        <h1 class="hero-title">{{ portfolio.title }}</h1>
+                        {% if portfolio.tagline %}
+                            <p class="hero-tagline">{{ portfolio.tagline }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="profile-image-container">
+                        {% if portfolio.profile_image %}
+                            <img src="{{ portfolio.profile_image.url }}" alt="{{ portfolio.title }}" class="profile-image">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    {% if portfolio.bio %}
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="row">
+                <div class="col-lg-10">
+                    {{ portfolio.bio|linebreaks }}
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    
+    <!-- Projects Sections -->
+    {% for section in sections %}
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">{{ section.title }}</h2>
+            
+            <div class="row">
+                {% for project in section.projects.all %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="project-card">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" alt="{{ project.title }}" class="img-fluid project-image w-100">
+                        {% endif %}
+                        <div class="project-content">
+                            <h3>{{ project.title }}</h3>
+                            <p>{{ project.description|truncatewords:25 }}</p>
+                            {% if project.url %}
+                                <a href="{{ project.url }}" class="btn btn-primary" target="_blank">View Project</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">No projects added yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+    
+    <!-- Contact Section -->
+    {% if portfolio.contact %}
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="contact-section">
+                        {% if portfolio.contact.email %}
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div>
+                                <h4>Email</h4>
+                                <a href="mailto:{{ portfolio.contact.email }}">{{ portfolio.contact.email }}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if portfolio.contact.phone %}
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>{{ portfolio.contact.phone }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mt-4">
+                            <h4>Social Media</h4>
+                            <div class="social-links">
+                                {% if portfolio.contact.linkedin %}
+                                    <a href="{{ portfolio.contact.linkedin }}" class="social-button" target="_blank">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                {% endif %}
+                                
+                                {% if portfolio.contact.github %}
+                                    <a href="{{ portfolio.contact.github }}" class="social-button" target="_blank">
+                                        <i class="bi bi-github"></i>
+                                    </a>
+                                {% endif %}
+                                
+                                {% if portfolio.contact.twitter %}
+                                    <a href="{{ portfolio.contact.twitter }}" class="social-button" target="_blank">
+                                        <i class="bi bi-twitter"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Add Bootstrap Icons for contact icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+<!-- Add Poppins font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
