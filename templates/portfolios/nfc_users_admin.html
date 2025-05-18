@@ -20,7 +20,11 @@
                 <td>{{ user.slug }}</td>
                 <td>
                     <a href="{% url 'portfolio_detail' slug=user.slug %}" class="btn btn-sm btn-primary" target="_blank">View Profile</a>
-                    <button class="btn btn-sm btn-success" disabled>Print</button>
+                    <form method="post" action="{% url 'nfc_print' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="slug" value="{{ user.slug }}">
+                        <button type="submit" class="btn btn-sm btn-success">Print</button>
+                    </form>
                 </td>
             </tr>
             {% empty %}

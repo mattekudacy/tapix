@@ -8,6 +8,28 @@ from .models import Portfolio, PortfolioTemplate, ProjectSection, Project, Conta
 from .forms import PortfolioForm, ProjectSectionForm, ProjectForm, ContactForm, RegisterForm
 from django.http import Http404
 from django.contrib.admin.views.decorators import staff_member_required
+import subprocess
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
+@staff_member_required
+@require_POST
+@csrf_exempt  # Only use this if you have issues with CSRF, otherwise keep CSRF protection!
+def nfc_print(request):
+    slug = request.POST.get('slug')
+    if not slug:
+        messages.error(request, "No slug provided.")
+        return redirect('nfc_users_admin')
+    url = f"https://tapix.app/{slug}"
+    try:
+        result = subprocess.run(
+            ['python', 'send_to_arduino.py', url],
+            capture_output=True, text=True, check=True
+        )
+        messages.success(request, f"Sent to Arduino: {url}")
+    except subprocess.CalledProcessError as e:
+        messages.error(request, f"Failed to send to Arduino: {e.output}")
+    return redirect('nfc_users_admin')
 
 @staff_member_required
 def nfc_users_admin(request):
