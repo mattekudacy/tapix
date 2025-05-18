@@ -11,6 +11,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 import subprocess
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+import sys
+import os
 
 @staff_member_required
 @require_POST
@@ -20,15 +22,19 @@ def nfc_print(request):
     if not slug:
         messages.error(request, "No slug provided.")
         return redirect('nfc_users_admin')
-    url = f"https://tapix.app/{slug}"
+    
+    # Use local development URL format instead of production
+    url = f"http://127.0.0.1:8000/portfolio/{slug}/"
+    
     try:
+        script_path = os.path.join(os.path.dirname(__file__), 'send_to_arduino.py')
         result = subprocess.run(
-            ['python', 'send_to_arduino.py', url],
+            [sys.executable, 'send_to_arduino.py', url],
             capture_output=True, text=True, check=True
         )
         messages.success(request, f"Sent to Arduino: {url}")
     except subprocess.CalledProcessError as e:
-        messages.error(request, f"Failed to send to Arduino: {e.output}")
+        messages.error(request, f"Failed to send to Arduino: {e.stdout} {e.stderr}")
     return redirect('nfc_users_admin')
 
 @staff_member_required

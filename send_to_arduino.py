@@ -1,7 +1,6 @@
 import sys
 import serial
 import time
-
 # Usage: python send_to_arduino.py https://tapix.app/your-slug
 
 SERIAL_PORT = 'COM3'  # Change this to your Arduino's port (e.g., '/dev/ttyACM0' for Linux/Mac)
@@ -20,6 +19,8 @@ def main():
     except serial.SerialException as e:
         print(f"Serial error: {e}")
         sys.exit(1)
+    except subprocess.CalledProcessError as e:
+        messages.error(request, f"Failed to send to Arduino: {e.stdout} {e.stderr}")
 
 if __name__ == "__main__":
     main()
