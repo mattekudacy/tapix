@@ -3,9 +3,27 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib.auth import login
 from django.contrib import messages
+from django.contrib.auth.models import User
 from .models import Portfolio, PortfolioTemplate, ProjectSection, Project, Contact
 from .forms import PortfolioForm, ProjectSectionForm, ProjectForm, ContactForm, RegisterForm
 from django.http import Http404
+from django.contrib.admin.views.decorators import staff_member_required
+
+@staff_member_required
+def nfc_users_admin(request):
+    """Admin view for NFC card embedding"""
+    from django.contrib.auth.models import User
+    users = User.objects.all().order_by('username')
+    user_data = []
+    for user in users:
+        active_portfolio = user.portfolios.filter(is_active=True, is_published=True).first()
+        if active_portfolio:
+            user_data.append({
+                'username': user.username,
+                'full_name': user.get_full_name() or user.username,
+                'slug': active_portfolio.slug,
+            })
+    return render(request, 'portfolios/nfc_users_admin.html', {'user_data': user_data})
 
 def template_preview(request, template_name):
     """Show a preview of a portfolio template with sample data"""
@@ -156,6 +174,18 @@ def create_portfolio(request, template_id):
     })
 
 @login_required
+def toggle_active_portfolio(request, portfolio_id):
+    """Toggle a portfolio as the user's active portfolio"""
+    portfolio = get_object_or_404(Portfolio, pk=portfolio_id, user=request.user)
+    
+    # Set this portfolio as active (which will deactivate others)
+    portfolio.is_active = True
+    portfolio.save()
+    
+    messages.success(request, f'"{portfolio.title}" is now your active portfolio!')
+    return redirect('dashboard')
+
+@login_required
 def edit_portfolio(request, portfolio_id):
     """View to edit a portfolio"""
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id, user=request.user)
@@ -260,3 +290,34 @@ def portfolio_detail(request, slug):
         'portfolio': portfolio,
         'sections': sections
     })
+
+# portfolios/views.py
+def user_portfolio(request, username):
+    """Redirect to a user's active portfolio or their first published portfolio"""
+    user = get_object_or_404(User, username=username)
+    
+    # Try to find active portfolio
+    active_portfolio = Portfolio.objects.filter(
+        user=user, 
+        is_published=True, 
+        is_active=True
+    ).first()
+    
+    # If no active portfolio, get the first published one
+    if not active_portfolio:
+        active_portfolio = Portfolio.objects.filter(
+            user=user, 
+            is_published=True
+        ).first()
+        
+    # If we found a portfolio, redirect to it
+    if active_portfolio:
+        return redirect('portfolio_detail', slug=active_portfolio.slug)
+    
+    # If user has no published portfolios but is the current logged in user
+    if request.user.username == username:
+        messages.info(request, "You don't have any published portfolios yet. Create and publish a portfolio first!")
+        return redirect('dashboard')
+        
+    # If we get here, the user has no published portfolios
+    raise Http404("This user has no published portfolios.")

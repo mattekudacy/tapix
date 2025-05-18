@@ -14,4 +14,7 @@ urlpatterns = [
     path('portfolio/<slug:slug>/', views.portfolio_detail, name='portfolio_detail'),
     path('accounts/register/', views.register, name='register'),
     path('template-preview/<str:template_name>/', views.template_preview, name='template_preview'),
+    path('portfolio/<int:portfolio_id>/set-active/', views.toggle_active_portfolio, name='toggle_active_portfolio'),
+    path('u/<str:username>/', views.user_portfolio, name='user_portfolio'),
+    path('nfc-admin/', views.nfc_users_admin, name='nfc_users_admin'),
 ]

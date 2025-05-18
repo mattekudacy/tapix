@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Contact Info | Portfolio Creator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Edit Contact Information for "{{ portfolio.title }}"</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                    {{ form.email }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.phone.id_for_label }}" class="form-label">Phone Number</label>
+                    {{ form.phone }}
+                </div>
+                
+                <h4 class="mt-4 mb-3">Social Media</h4>
+                
+                <div class="mb-3">
+                    <label for="{{ form.linkedin.id_for_label }}" class="form-label">LinkedIn URL</label>
+                    {{ form.linkedin }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.github.id_for_label }}" class="form-label">GitHub URL</label>
+                    {{ form.github }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.twitter.id_for_label }}" class="form-label">Twitter/X URL</label>
+                    {{ form.twitter }}
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'edit_portfolio' portfolio_id=portfolio.id %}" class="btn btn-outline-secondary">Back</a>
+                    <button type="submit" class="btn btn-primary">Update Contact Info</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

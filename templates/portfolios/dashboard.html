@@ -30,13 +30,24 @@
                                 {% else %}
                                     <span class="badge bg-secondary">Draft</span>
                                 {% endif %}
+                                
+                                {% if portfolio.is_active %}
+                                    <span class="badge bg-primary">Active</span>
+                                {% endif %}
                             </p>
                         </div>
-                        <div class="card-footer">
-                            <a href="{% url 'edit_portfolio' portfolio_id=portfolio.id %}" class="btn btn-sm btn-primary">Edit</a>
-                            {% if portfolio.is_published %}
-                                <a href="{{ portfolio.get_absolute_url }}" class="btn btn-sm btn-secondary" target="_blank">View</a>
-                            {% endif %}
+                        <div class="card-footer d-flex justify-content-between">
+                            <div>
+                                <a href="{% url 'edit_portfolio' portfolio_id=portfolio.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                {% if portfolio.is_published %}
+                                    <a href="{{ portfolio.get_absolute_url }}" class="btn btn-sm btn-secondary" target="_blank">View</a>
+                                {% endif %}
+                            </div>
+                            <div>
+                                {% if not portfolio.is_active and portfolio.is_published %}
+                                    <a href="{% url 'toggle_active_portfolio' portfolio_id=portfolio.id %}" class="btn btn-sm btn-outline-success">Set as Active</a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>

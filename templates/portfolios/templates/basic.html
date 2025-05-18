@@ -43,7 +43,7 @@
                 <h2 class="section-title">{{ section.title }}</h2>
                 
                 <div class="row">
-                    {% for project in section.projects %}
+                    {% for project in section.projects.all %}
                         <div class="col-md-6 col-lg-4">
                             <div class="card project-card">
                                 {% if project.image %}

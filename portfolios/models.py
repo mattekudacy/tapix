@@ -22,8 +22,9 @@ class Portfolio(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     
-    # Basic info
+    # Basic info fields remain the same
     tagline = models.CharField(max_length=255, blank=True)
     bio = models.TextField(blank=True)
     profile_image = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
@@ -37,6 +38,11 @@ class Portfolio(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(f"{self.user.username}-{self.title}")
+        
+        # Ensure only one active portfolio per user
+        if self.is_active:
+            Portfolio.objects.filter(user=self.user, is_active=True).exclude(pk=self.pk).update(is_active=False)
+            
         super().save(*args, **kwargs)
 
 class ProjectSection(models.Model):

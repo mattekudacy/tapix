@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Add Section | Portfolio Creator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Add New Section to "{{ portfolio.title }}"</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.title.id_for_label }}" class="form-label">Section Title</label>
+                    {{ form.title }}
+                    <small class="form-text text-muted">Examples: "Web Projects", "Design Work", "Research", etc.</small>
+                    {% if form.title.errors %}
+                    <div class="alert alert-danger mt-1">
+                        {{ form.title.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'edit_portfolio' portfolio_id=portfolio.id %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Add Section</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

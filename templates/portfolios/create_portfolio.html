@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Create Portfolio | Portfolio Creator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Create Your Portfolio</h1>
+    <p class="mb-4">You've selected the <strong>{{ template.name }}</strong> template. Now let's add some basic information to your portfolio.</p>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.title.id_for_label }}" class="form-label">Portfolio Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                    <div class="alert alert-danger mt-1">
+                        {{ form.title.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.tagline.id_for_label }}" class="form-label">Tagline or Subtitle</label>
+                    {{ form.tagline }}
+                    <small class="form-text text-muted">A brief description of what you do (e.g., "Web Developer & Designer")</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
+                    {{ form.bio }}
+                    <small class="form-text text-muted">Write a bit about yourself, your skills, and experience</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.profile_image.id_for_label }}" class="form-label">Profile Image</label>
+                    {{ form.profile_image }}
+                </div>
+                
+                <div class="mb-3 form-check">
+                    {{ form.is_published }}
+                    <label class="form-check-label" for="{{ form.is_published.id_for_label }}">
+                        Publish portfolio immediately
+                    </label>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'choose_template' %}" class="btn btn-outline-secondary">Back to Templates</a>
+                    <button type="submit" class="btn btn-primary">Create Portfolio</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

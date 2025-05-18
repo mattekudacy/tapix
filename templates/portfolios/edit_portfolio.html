@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Edit {{ portfolio.title }} | Portfolio Creator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Edit Portfolio</h1>
+        {% if portfolio.is_published %}
+            <a href="{% url 'portfolio_detail' slug=portfolio.slug %}" class="btn btn-outline-primary" target="_blank">
+                View Published Portfolio
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <!-- Sidebar with portfolio sections -->
+        <div class="col-md-3 mb-4">
+            <div class="list-group">
+                <a href="#basic-info" class="list-group-item list-group-item-action active">Basic Information</a>
+                <a href="#sections" class="list-group-item list-group-item-action">Projects & Sections</a>
+                <a href="#contact-info" class="list-group-item list-group-item-action">Contact Information</a>
+            </div>
+        </div>
+
+        <!-- Main content area -->
+        <div class="col-md-9">
+            <!-- Basic Information -->
+            <div id="basic-info" class="card mb-4">
+                <div class="card-header">
+                    <h3>Basic Information</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">Portfolio Title</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                            <div class="alert alert-danger mt-1">
+                                {{ form.title.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.tagline.id_for_label }}" class="form-label">Tagline</label>
+                            {{ form.tagline }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
+                            {{ form.bio }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.profile_image.id_for_label }}" class="form-label">Profile Image</label>
+                            {% if portfolio.profile_image %}
+                                <div class="mb-2">
+                                    <img src="{{ portfolio.profile_image.url }}" alt="{{ portfolio.title }}" style="max-width: 150px; max-height: 150px;">
+                                </div>
+                            {% endif %}
+                            {{ form.profile_image }}
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.is_published }}
+                            <label class="form-check-label" for="{{ form.is_published.id_for_label }}">
+                                Publish portfolio
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Update Information</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Projects & Sections -->
+            <div id="sections" class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3>Projects & Sections</h3>
+                    <a href="{% url 'add_section' portfolio_id=portfolio.id %}" class="btn btn-sm btn-success">Add New Section</a>
+                </div>
+                <div class="card-body">
+                    {% if sections %}
+                        <div class="accordion" id="sectionsAccordion">
+                            {% for section in sections %}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading{{ section.id }}">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ section.id }}">
+                                            {{ section.title }} ({{ section.projects.count }} projects)
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ section.id }}" class="accordion-collapse collapse show" aria-labelledby="heading{{ section.id }}" data-bs-parent="#sectionsAccordion">
+                                        <div class="accordion-body">
+                                            <div class="d-flex justify-content-end mb-3">
+                                                <a href="{% url 'add_project' section_id=section.id %}" class="btn btn-sm btn-outline-primary">Add Project</a>
+                                            </div>
+                                            
+                                            {% if section.projects.exists %}
+                                                <div class="row">
+                                                    {% for project in section.projects.all %}
+                                                        <div class="col-md-6 mb-3">
+                                                            <div class="card h-100">
+                                                                {% if project.image %}
+                                                                    <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}" style="height: 150px; object-fit: cover;">
+                                                                {% endif %}
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">{{ project.title }}</h5>
+                                                                    <p class="card-text">{{ project.description|truncatechars:100 }}</p>
+                                                                    {% if project.url %}
+                                                                        <a href="{{ project.url }}" class="btn btn-sm btn-outline-secondary" target="_blank">View Project</a>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <div class="alert alert-info">
+                                                    No projects in this section yet. Add your first project!
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No sections created yet. Add your first section to organize your projects.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div id="contact-info" class="card mb-4">
+                <div class="card-header">
+                    <h3>Contact Information</h3>
+                </div>
+                <div class="card-body">
+                    <p>Update your contact details so people can reach you.</p>
+                    <a href="{% url 'edit_contact' portfolio_id=portfolio.id %}" class="btn btn-primary">Edit Contact Information</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

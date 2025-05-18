@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Add Project | Portfolio Creator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Add Project to "{{ section.title }}"</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.title.id_for_label }}" class="form-label">Project Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                    <div class="alert alert-danger mt-1">
+                        {{ form.title.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                    {{ form.description }}
+                    <small class="form-text text-muted">Explain what this project is about, your role, technologies used, etc.</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.image.id_for_label }}" class="form-label">Project Image</label>
+                    {{ form.image }}
+                    <small class="form-text text-muted">Upload a screenshot or image of your project.</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.url.id_for_label }}" class="form-label">Project URL</label>
+                    {{ form.url }}
+                    <small class="form-text text-muted">Link to the live project, GitHub repository, etc. (optional)</small>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'edit_portfolio' portfolio_id=section.portfolio.id %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Add Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
