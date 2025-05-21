@@ -8,7 +8,6 @@ A Django-based web application that allows users to create and publish professio
 - PostgreSQL (recommended for production)
 - HTML/CSS
 - Bootstrap 5
-- JavaScript
 
 ## Prerequisites
 - Python 3.12 or newer
