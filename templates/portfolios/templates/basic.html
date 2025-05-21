@@ -4,7 +4,7 @@
 {% block title %}{% if is_preview %}Basic Template Preview{% else %}{{ portfolio.title }}{% endif %}{% endblock %}
 
 {% block extra_css %}
-<!-- No changes to CSS -->
+<link rel="stylesheet" href="{% static 'css/basic.css' %}">
 {% endblock %}
 
 {% block content %}

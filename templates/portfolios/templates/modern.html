@@ -4,21 +4,9 @@
 {% block title %}{{ portfolio.title }}{% endblock %}
 
 {% block extra_css %}
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-    }
-    
-    .portfolio-modern {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    
-    .hero-section {
-        height: 70vh;
-        background-color: #141E30;
-        background-image: linear-gradient(to right, #141E30, #243B55);
-        color: white;
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/modern.css' %}">
+{% endblock %}
         display: flex;
         align-items: center;
     }

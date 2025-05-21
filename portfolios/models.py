@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.text import slugify
+from django.utils.crypto import get_random_string
 
 class PortfolioTemplate(models.Model):
     """Model representing different portfolio templates"""
@@ -16,6 +17,7 @@ class PortfolioTemplate(models.Model):
 class Portfolio(models.Model):
     """Model representing a user's portfolio"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='portfolios')
+    short_code = models.CharField(max_length=10, unique=True, blank=True, null=True)
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
     template = models.ForeignKey(PortfolioTemplate, on_delete=models.CASCADE)
@@ -36,6 +38,9 @@ class Portfolio(models.Model):
         return reverse('portfolio_detail', kwargs={'slug': self.slug})
     
     def save(self, *args, **kwargs):
+        if not self.short_code:
+            self.short_code = get_random_string(8)
+
         if not self.slug:
             self.slug = slugify(f"{self.user.username}-{self.title}")
         

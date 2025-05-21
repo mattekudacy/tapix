@@ -18,4 +18,5 @@ urlpatterns = [
     path('u/<str:username>/', views.user_portfolio, name='user_portfolio'),
     path('nfc-admin/', views.nfc_users_admin, name='nfc_users_admin'),
     path('nfc-print/', views.nfc_print, name='nfc_print'),
+    path('p/<str:code>/', views.short_portfolio_redirect, name='short_portfolio_redirect'),
 ]

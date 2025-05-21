@@ -11,8 +11,13 @@ from django.contrib.admin.views.decorators import staff_member_required
 import subprocess
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.shortcuts import redirect, get_object_or_404
 import sys
 import os
+
+def short_portfolio_redirect(request, code):
+    portfolio = get_object_or_404(Portfolio, short_code=code, is_published=True)
+    return redirect('portfolio_detail', slug=portfolio.slug)
 
 @staff_member_required
 @require_POST
@@ -23,8 +28,13 @@ def nfc_print(request):
         messages.error(request, "No slug provided.")
         return redirect('nfc_users_admin')
     
+    portfolio = get_object_or_404(Portfolio, slug=slug, is_published=True)
     # Use local development URL format instead of production
-    url = f"http://127.0.0.1:8000/portfolio/{slug}/"
+    # url = f"http://127.0.0.1:8000/portfolio/{slug}/"
+
+    # url = f"https://4fllrv7v-8000.asse.devtunnels.ms/portfolio/{slug}/"
+
+    url = f"https://4fllrv7v-8000.asse.devtunnels.ms/p/{portfolio.short_code}/"
     
     try:
         script_path = os.path.join(os.path.dirname(__file__), 'send_to_arduino.py')
